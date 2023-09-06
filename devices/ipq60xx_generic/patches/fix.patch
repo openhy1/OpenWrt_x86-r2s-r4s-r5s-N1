@@ -115,3 +115,70 @@
 +&usb3 {
 +status = "ok";
 +};
+
+diff --git a/package/firmware/ath11k-wifi/board-qihoo_360v6.bin.IPQ6018 b/package/firmware/ath11k-wifi/board-qihoo-v6.bin.IPQ6018
+similarity index 100%
+rename from package/firmware/ath11k-wifi/board-qihoo_360v6.bin.IPQ6018
+rename to package/firmware/ath11k-wifi/board-qihoo-v6.bin.IPQ6018
+
+--- a/package/firmware/ath11k-wifi/Makefile
++++ b/package/firmware/ath11k-wifi/Makefile
+@@ -28,7 +28,7 @@ ALLWIFIBOARDS:= \
+   cmiot-ax18 \
+ 	gl-ax1800 \
+ 	gl-axt1800 \
+-	qihoo_v6
++	qihoo-v6
+ 
+ ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ath11k-wifi-$(BOARD))
+ 
+@@ -88,7 +88,7 @@ endef
+ $(eval $(call generate-ath11k-wifi-package,cmiot-ax18,CMIOT AX18))
+ $(eval $(call generate-ath11k-wifi-package,gl-ax1800,Gl.iNET AX1800))
+ $(eval $(call generate-ath11k-wifi-package,gl-axt1800,Gl.iNET AXT1800))
+-$(eval $(call generate-ath11k-wifi-package,qihoo_v6,QIHOO 360V6))
++$(eval $(call generate-ath11k-wifi-package,qihoo-v6,QIHOO 360V6))
+ 
+ 
+ $(foreach PACKAGE,$(ALLWIFIPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
+
+--- a/package/firmware/ath11k-firmware/Makefile
++++ b/package/firmware/ath11k-firmware/Makefile
+@@ -32,6 +32,11 @@ define Package/ath11k-firmware-default
+   DEPENDS:=
+ endef
+ 
++define Package/ath11k-firmware-ipq6018
++$(Package/ath11k-firmware-default)
++  TITLE:=ath11k firmware for IPQ6018 devices
++endef
++
+ define Package/ath11k-firmware-ipq8074
+ $(Package/ath11k-firmware-default)
+   TITLE:=IPQ8074 ath11k firmware
+@@ -57,6 +62,18 @@ define Download/qcn9074-board
+ endef
+ $(eval $(call Download,qcn9074-board))
+ 
++define Package/ath11k-firmware-ipq6018/install
++	$(INSTALL_DIR) $(1)/lib/firmware/ath11k/IPQ6018/hw1.0
++	$(INSTALL_DIR) $(1)/lib/firmware/IPQ6018
++	$(INSTALL_DATA) \
++		$(PKG_BUILD_DIR)/IPQ6018/hw1.0/2.5.0.1/WLAN.HK.2.5.0.1-01100-QCAHKSWPL_SILICONZ-1/* \
++		$(1)/lib/firmware/IPQ6018/
++	$(INSTALL_DATA) ./files/board-2.bin.IPQ6018 \
++		$(1)/lib/firmware/ath11k/IPQ6018/hw1.0/board-2.bin
++	$(INSTALL_DATA) ./files/qdss_trace_config.bin \
++		$(1)/lib/firmware/ath11k/IPQ6018/hw1.0/qdss_trace_config.bin
++endef
++
+ define Package/ath11k-firmware-ipq8074/install
+ 	$(INSTALL_DIR) $(1)/lib/firmware/IPQ8074
+ 	$(INSTALL_DATA) \
+@@ -73,5 +90,6 @@ define Package/ath11k-firmware-qcn9074/install
+ 		$(DL_DIR)/$(QCN9074_BOARD_FILE) $(1)/lib/firmware/ath11k/QCN9074/hw1.0/board-2.bin
+ endef
+ 
++$(eval $(call BuildPackage,ath11k-firmware-ipq6018))
+ $(eval $(call BuildPackage,ath11k-firmware-ipq8074))
+ $(eval $(call BuildPackage,ath11k-firmware-qcn9074))
