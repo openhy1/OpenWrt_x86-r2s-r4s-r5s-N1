@@ -164,7 +164,7 @@ rename to package/firmware/ath11k-wifi/board-qihoo-v6.bin.IPQ6018
 +	$(INSTALL_DIR) $(1)/lib/firmware/ath11k/IPQ6018/hw1.0
 +	$(INSTALL_DIR) $(1)/lib/firmware/IPQ6018
 +	$(INSTALL_DATA) \
-+		$(PKG_BUILD_DIR)/IPQ6018/hw1.0/2.5.0.1/WLAN.HK.2.5.0.1-01100-QCAHKSWPL_SILICONZ-1/* \
++		$(PKG_BUILD_DIR)/ath11k-firmware/IPQ6018/hw1.0/2.5.0.1/WLAN.HK.2.5.0.1-01100-QCAHKSWPL_SILICONZ-1/* \
 +		$(1)/lib/firmware/IPQ6018/
 +	$(INSTALL_DATA) ./files/board-2.bin.IPQ6018 \
 +		$(1)/lib/firmware/ath11k/IPQ6018/hw1.0/board-2.bin
